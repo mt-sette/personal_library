@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from db import (
     get_books,
     get_friends,
@@ -25,17 +26,22 @@ def loans_management():
             loans = books_on_loan()
             if loans:
                 st.success(f"Found {len(loans)} active loan(s)!")
-          
-                for loan in loans:
-                    col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
-                    with col1:
-                        st.write(f"**{loan[1]}**")
-                    with col2:
-                        st.write(f"{loan[2]}")
-                    with col3:
-                        st.write(f"Loaned to: {loan[3]}")
-                    with col4:
-                        st.write(f"Since: {loan[4]}")
+                df = pd.DataFrame(
+                    loans,
+                    columns=[
+                        "Book ID",
+                        "Title",
+                        "Author",
+                        "Friend Name",
+                        "Loan Date",
+                        "Return Date",
+                    ],
+                )
+                st.dataframe(
+                    df[["Title", "Author", "Friend Name", "Loan Date"]],
+                    use_container_width=True,
+                    hide_index=True,
+                )
             else:
                 st.info("No books currently on loan.")
 
@@ -45,14 +51,19 @@ def loans_management():
         if st.button("Load All Loans", key="load_all_loans"):
             loans = get_loans()
             if loans:
-            
                 st.success(f"Found {len(loans)} loan(s)!")
-                for loan in loans:
-                    status = "Active" if loan[5] is None else "Returned"
-                    status_color = "green" if status == "Active" else "gray"
-                    st.write(
-                        f"Book: {loan[1]} on loan to {loan[3]} | Status: :{status_color}[{status}]"
-                    )
+                df = pd.DataFrame(
+                    loans,
+                    columns=[
+                        "ID",
+                        "Book ID",
+                        "Friend ID",
+                        "Loan Date",
+                        "Due Date",
+                        "Return Date",
+                    ],
+                )
+                st.dataframe(df, use_container_width=True, hide_index=True)
             else:
                 st.info("No loans in the system.")
 

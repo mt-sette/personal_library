@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from db import get_friends, get_friend_by_name, add_friend
 
 
@@ -15,14 +16,8 @@ def friends_catalog():
             friends = get_friends()
             if friends:
                 st.success(f"Found {len(friends)} friends!")
-                for friend in friends:
-                    col1, col2, col3 = st.columns([2, 2, 2])
-                    with col1:
-                        st.write(f"**{friend[1]}**")
-                    with col2:
-                        st.write(f"{friend[3]}")
-                    with col3:
-                        st.write(f"{friend[2]}")
+                df = pd.DataFrame(friends, columns=["ID", "Name", "Phone", "Email"])
+                st.dataframe(df, use_container_width=True, hide_index=True)
             else:
                 st.info("No friends in the catalog yet.")
 
@@ -38,14 +33,8 @@ def friends_catalog():
                 friends = get_friend_by_name(search_query)
                 if friends:
                     st.success(f"Found {len(friends)} friend(s)!")
-                    for friend in friends:
-                        col1, col2, col3 = st.columns([2, 2, 2])
-                        with col1:
-                            st.write(f"**{friend[1]}**")
-                        with col2:
-                            st.write(f"{friend[3]}")
-                        with col3:
-                            st.write(f"{friend[2]}")
+                    df = pd.DataFrame(friends, columns=["ID", "Name", "Phone", "Email"])
+                    st.dataframe(df, use_container_width=True, hide_index=True)
                 else:
                     st.warning(f"No friends found matching '{search_query}'")
             else:
