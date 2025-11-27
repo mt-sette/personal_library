@@ -53,11 +53,6 @@ def add_book(title, author):
     rows = _execute_query(query, params, select=False)
     print(f"Added book: {title} by {author}, {rows} row(s) affected.")
     return rows
-    
-def find_books_by_title(title_pattern):
-    query = "SELECT * FROM books WHERE title REGEXP :pattern;"
-    params = {"pattern": title_pattern}
-    return _execute_query(query, params)
 
 ## LOANS ##
 

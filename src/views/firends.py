@@ -1,15 +1,14 @@
 import streamlit as st
 import pandas as pd
-from db import get_friends, get_friend_by_name, add_friend
+from db import get_friends, add_friend
 
 
 def friends_catalog():
     st.header("Friends Catalog")
 
     # Create tabs for different operations
-    tab1, tab2, tab3 = st.tabs(["View All Friends", "Search by Name", "Add Friend"])
+    tab1, tab2 = st.tabs(["View All Friends", "Add Friend"])
 
-    # Tab 1: View All Friends
     with tab1:
         st.subheader("All Friends")
         if st.button("Load All Friends", key="load_all_friends"):
@@ -21,27 +20,8 @@ def friends_catalog():
             else:
                 st.info("No friends in the catalog yet.")
 
-    # Tab 2: Search by Name
+
     with tab2:
-        st.subheader("Search Friends by Name")
-        search_query = st.text_input(
-            "Enter friend name (or part of it):", placeholder="e.g., 'Alice' or 'Smith'"
-        )
-
-        if st.button("Search", key="search_friends"):
-            if search_query.strip():
-                friends = get_friend_by_name(search_query)
-                if friends:
-                    st.success(f"Found {len(friends)} friend(s)!")
-                    df = pd.DataFrame(friends, columns=["ID", "Name", "Phone", "Email"])
-                    st.dataframe(df, use_container_width=True, hide_index=True)
-                else:
-                    st.warning(f"No friends found matching '{search_query}'")
-            else:
-                st.warning("Please enter a search term")
-
-    # Tab 3: Add New Friend
-    with tab3:
         st.subheader("Add a New Friend")
 
         with st.form("add_friend_form"):

@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-from db import get_books, find_books_by_title, add_book
+from db import get_books, add_book
 
 
 def books_catalog():
     st.header("Books Catalog")
 
     # Create tabs for different operations
-    tab1, tab2, tab3 = st.tabs(["View All Books", "Search by Title", "Add Book"])
+    tab1, tab2 = st.tabs(["View All Books", "Add Book"])
 
     # Tab 1: View All Books
     with tab1:
@@ -21,27 +21,8 @@ def books_catalog():
             else:
                 st.info("No books available in the catalog yet.")
 
-    # Tab 2: Search by Title
-    with tab2:
-        st.subheader("Search Books by Title")
-        search_query = st.text_input(
-            "Enter book title (or part of it):", placeholder="e.g., 'Great' or 'Gatsby'"
-        )
-
-        if st.button("Search", key="search_books"):
-            if search_query.strip():
-                books = find_books_by_title(search_query)
-                if books:
-                    st.success(f"Found {len(books)} book(s)!")
-                    df = pd.DataFrame(books, columns=["ID", "Title", "Author"])
-                    st.dataframe(df, use_container_width=True, hide_index=True)
-                else:
-                    st.warning(f"No books found matching '{search_query}'")
-            else:
-                st.warning("Please enter a search term")
-
     # Tab 3: Add New Book
-    with tab3:
+    with tab2:
         st.subheader("Add a New Book")
 
         with st.form("add_book_form"):
